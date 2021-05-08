@@ -23,6 +23,9 @@
 #ifndef TC_RISCV
 #define TC_RISCV
 
+// TODO(xzl): this is a hack! should prefer passing cmdline flag
+#define HIPAIC_EXTENDED_ARITH
+
 #include "opcode/riscv.h"
 
 struct frag;
