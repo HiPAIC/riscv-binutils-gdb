@@ -234,7 +234,13 @@ riscv_multi_subset_supports (enum riscv_insn_class insn_class)
     case INSN_CLASS_I: return riscv_subset_supports ("i");
     case INSN_CLASS_C: return riscv_subset_supports ("c");
     case INSN_CLASS_A: return riscv_subset_supports ("a");
-    case INSN_CLASS_M: return riscv_subset_supports ("m");
+    case INSN_CLASS_M:
+// TODO(xzl): this is a hack! we only supports mul but not all M class Insns.
+#ifdef HIPAIC_EXTENDED_ARITH
+      return TRUE;
+#else
+      return riscv_subset_supports ("m");
+#endif // HIPAIC_EXTENDED_ARITH
     case INSN_CLASS_F: return riscv_subset_supports ("f");
     case INSN_CLASS_D: return riscv_subset_supports ("d");
     case INSN_CLASS_Q: return riscv_subset_supports ("q");
