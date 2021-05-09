@@ -597,8 +597,8 @@
 #define MASK_CUSTOM3_RD_RS1_RS2  0x707f
 
 // HiPAIC extended
-#define MATCH_HP_GRND 0x0000007f // (0000000) [xxxxx rs1] (00000 later can use for imm) (000) (00000 later can use for imm) (1111111)
-#define MASK_HP_GRND  0xfe0fffff // (1111111) [00000 rs1] (11111 later can be 00000   ) (111) (11111 later can be 00000   ) (1111111)
+#define MATCH_HP_GRND 0x0000007f // (0000000) (00000 later can use for imm) [xxxxx rs1] (000) (00000 later can use for imm) (1111111)
+#define MASK_HP_GRND  0xfff07fff // (1111111) (11111 later can be 00000   ) [00000 rs1] (111) (11111 later can be 00000   ) (1111111)
 
 #define MATCH_HP_LOPX 0x0000107f // (0000000) [xxxxx rs2] [yyyyy rs1] (001) (00000 later can make use) (1111111)
 #define MASK_HP_LOPX  0xfe007fff // (1111111) [00000 rs2] [00000 rs2] (111) (11111 later can be 00000) (1111111)
