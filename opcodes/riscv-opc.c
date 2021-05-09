@@ -482,6 +482,13 @@ const struct riscv_opcode riscv_opcodes[] =
 {"amomin.d.aqrl",  64, INSN_CLASS_A , "d,t,0(s)",  MATCH_AMOMIN_D | MASK_AQRL, MASK_AMOMIN_D | MASK_AQRL, match_opcode, INSN_DREF|INSN_8_BYTE },
 {"amominu.d.aqrl", 64, INSN_CLASS_A , "d,t,0(s)",  MATCH_AMOMINU_D | MASK_AQRL, MASK_AMOMINU_D | MASK_AQRL, match_opcode, INSN_DREF|INSN_8_BYTE },
 
+// HiPAIC extended
+// TODO(xzl): this is a hack! use INSN_CLASS_I so they are always enabled.
+// We should later define our own ISA class.
+{"hp.grnd", 0, INSN_CLASS_I, "s",     MATCH_HP_GRND, MASK_HP_GRND, match_opcode, 0 },
+{"hp.lopx", 0, INSN_CLASS_I, "s,t",   MATCH_HP_LOPX, MASK_HP_LOPX, match_opcode, 0 },
+{"hp.mul",  0, INSN_CLASS_I, "d,s,t", MATCH_HP_MUL,  MASK_HP_MUL,  match_opcode, 0 },
+
 /* Multiply/Divide instruction subset */
 {"mul",       0, INSN_CLASS_M,   "d,s,t",  MATCH_MUL, MASK_MUL, match_opcode, 0 },
 {"mulh",      0, INSN_CLASS_M,   "d,s,t",  MATCH_MULH, MASK_MULH, match_opcode, 0 },
