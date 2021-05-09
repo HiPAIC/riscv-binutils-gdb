@@ -29,6 +29,9 @@ typedef uint64_t insn_t;
 
 static inline unsigned int riscv_insn_length (insn_t insn)
 {
+  // TODO(xzl): this is hack! We should find better ways to decide the length.
+  if ((insn & 0x7f) == 0x7f) /* HiPAIC extensions, 32bit */
+    return 4;
   if ((insn & 0x3) != 0x3) /* RVC.  */
     return 2;
   if ((insn & 0x1f) != 0x1f) /* Base ISA and extensions in 32-bit space.  */
