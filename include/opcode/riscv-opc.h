@@ -597,6 +597,18 @@
 #define MASK_CUSTOM3_RD_RS1  0x707f
 #define MATCH_CUSTOM3_RD_RS1_RS2 0x707b
 #define MASK_CUSTOM3_RD_RS1_RS2  0x707f
+
+// HiPAIC extended
+#define MATCH_HP_GRND 0x0000007f // (0000000) [xxxxx rs1] (00000 later can use for imm) (000) (00000 later can use for imm) (1111111)
+#define MASK_HP_GRND  0xfe0fffff // (1111111) [00000 rs1] (11111 later can be 00000   ) (111) (11111 later can be 00000   ) (1111111)
+
+#define MATCH_HP_LOPX 0x0000107f // (0000000) [xxxxx rs2] [yyyyy rs1] (001) (00000 later can make use) (1111111)
+#define MASK_HP_LOPX  0xfe007fff // (1111111) [00000 rs2] [00000 rs2] (111) (11111 later can be 00000) (1111111)
+
+#define MATCH_HP_MUL 0x0000207f  // (0000000) [xxxxx rs2] [yyyyy rs1] (010) [zzzzz rd] (1111111)
+#define MASK_HP_MUL  0xfe00707f  // (1111111) [00000 rs2] [00000 rs2] (111) [00000 rd] (1111111)
+
+
 /* Privileged CSR addresses (v1.11).  */
 #define CSR_USTATUS 0x0
 #define CSR_UIE 0x4
@@ -1130,6 +1142,12 @@ DECLARE_INSN(custom3_rs1_rs2, MATCH_CUSTOM3_RS1_RS2, MASK_CUSTOM3_RS1_RS2)
 DECLARE_INSN(custom3_rd, MATCH_CUSTOM3_RD, MASK_CUSTOM3_RD)
 DECLARE_INSN(custom3_rd_rs1, MATCH_CUSTOM3_RD_RS1, MASK_CUSTOM3_RD_RS1)
 DECLARE_INSN(custom3_rd_rs1_rs2, MATCH_CUSTOM3_RD_RS1_RS2, MASK_CUSTOM3_RD_RS1_RS2)
+
+// HiPAIC extended
+DECLARE_INSN(hp_grnd, MATCH_HP_GRND, MASK_HP_GRND)
+DECLARE_INSN(hp_lopx, MATCH_HP_LOPX, MASK_HP_LOPX)
+DECLARE_INSN(hp_mul, MATCH_HP_MUL, MASK_HP_MUL)
+
 #endif /* DECLARE_INSN.  */
 #ifdef DECLARE_CSR
 /* Privileged.  */
