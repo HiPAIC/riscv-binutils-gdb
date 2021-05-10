@@ -71,6 +71,14 @@ struct _sim_cpu {
 #undef DECLARE_CSR
   } csr;
 
+  struct {
+#define HIPAIC_RAND_WINDOW_SIZE (1024)
+    unsigned_word rand_window[HIPAIC_RAND_WINDOW_SIZE];
+    unsigned_word rng_data;  // for random number generator
+    unsigned_word input_u;
+    unsigned_word input_r_idx_u;
+  } hipaic;
+
   sim_cpu_base base;
 };
 

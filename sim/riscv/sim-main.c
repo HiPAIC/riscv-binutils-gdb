@@ -1271,6 +1271,35 @@ execute_c (SIM_CPU *cpu, unsigned_word iw, const struct riscv_opcode *op)
   return pc;
 }
 
+// TODO(xzl): this is a hack! Should use cmdline flags to control RNG behavior, like fixed, simple, real random, etc.
+// Should also add a new TRACE kind for the random number generator data write.
+static unsigned_word NextRnd(SIM_CPU *cpu) {
+  return (cpu->hipaic.rng_data += 3);
+}
+
+#define T unsigned_word
+#define ET unsigned_word
+#define DECIMAL_BITS (sizeof(T)*8/2)
+static unsigned_word SecretMultiply(SIM_CPU *cpu, int rs1, int rs2) {
+		const T r1 = cpu->hipaic.rand_window[cpu->hipaic.input_r_idx_u];
+		const T r2 = cpu->hipaic.rand_window[cpu->regs[rs2]];
+		const T r3 = NextRnd(cpu);
+		const T u = cpu->hipaic.input_u;
+		const T v = cpu->regs[rs1];
+
+		const ET t = ((ET) r1) * ((ET) r2)
+				- ((ET) u) * ((ET) r2)
+				- ((ET) v) * ((ET) r1);
+		const ET w = t + (((ET) r3) << DECIMAL_BITS);
+		const ET uv = ((ET)u) * ((ET)v);
+		const ET w_uv = w + uv;
+		const T res = w_uv >> DECIMAL_BITS;
+		return res;
+}
+#undef T
+#undef ET
+#undef DECIMAL_BITS
+
 static sim_cia
 execute_i (SIM_CPU *cpu, unsigned_word iw, const struct riscv_opcode *op)
 {
@@ -1298,6 +1327,26 @@ execute_i (SIM_CPU *cpu, unsigned_word iw, const struct riscv_opcode *op)
 
   switch (op->match)
     {
+    case MATCH_HP_GRND:
+      TRACE_INSN (cpu, "hp.grnd %s;  // rand_window[%s = %u] = NextRnd(), rng_data=%u",
+      rs1_name, rs1_name, cpu->regs[rs1], cpu->hipaic.rng_data);
+      // TODO(xzl): Should add a new TRACE kind for rand_window write.
+      cpu->hipaic.rand_window[cpu->regs[rs1]] = NextRnd(cpu);
+      break;
+    case MATCH_HP_LOPX:
+      TRACE_INSN (cpu, "hp.lopx %s, %s;  // input_u = %s = %u, input_r_idx_u = %s = %u",
+      rs1_name, rs2_name, rs1_name, cpu->regs[rs1], rs2_name, cpu->regs[rs2]);
+      // TODO(xzl): Should add a new TRACE kind for input_u and input_r_idx_u write.
+      cpu->hipaic.input_u = cpu->regs[rs1];
+      cpu->hipaic.input_r_idx_u = cpu->regs[rs2];
+      break;
+    case MATCH_HP_MUL:
+      TRACE_INSN (cpu, "hp.mul %s, %s, %s;  // %s = SecretMultiply(input_u=%u, rand_window[input_r_idx_u=%u]=%u, %s=%u, rand_window[%s=%u]=%u, rng_data=%u)",
+      rd_name, rs1_name, rs2_name, rd_name,
+      cpu->hipaic.input_u, cpu->hipaic.input_r_idx_u, cpu->hipaic.rand_window[cpu->hipaic.input_r_idx_u],
+      rs1_name, cpu->regs[rs1], rs2_name, cpu->regs[rs2], cpu->hipaic.rand_window[cpu->regs[rs2]], cpu->hipaic.rng_data);
+      store_rd(cpu, rd, SecretMultiply(cpu, rs1, rs2));
+      break;
     case MATCH_ADD:
       TRACE_INSN (cpu, "add %s, %s, %s;  // %s = %s + %s",
 		  rd_name, rs1_name, rs2_name, rd_name, rs1_name, rs2_name);
@@ -2339,6 +2388,8 @@ void initialize_cpu (SIM_DESC sd, SIM_CPU *cpu, int mhartid)
   int i;
 
   memset (cpu->regs, 0, sizeof (cpu->regs));
+
+  memset(&cpu->hipaic, 0, sizeof(cpu->hipaic));
 
   CPU_PC_FETCH (cpu) = pc_get;
   CPU_PC_STORE (cpu) = pc_set;
