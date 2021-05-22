@@ -494,6 +494,7 @@ const struct riscv_opcode riscv_opcodes[] =
 {"hp.savrnd", 0, INSN_CLASS_I, "s",   MATCH_HP_SAVRND, MASK_HP_SAVRND, match_opcode, 0 },
 {"hp.ldopx", 0, INSN_CLASS_I, "s,t",  MATCH_HP_LDOPX, MASK_HP_LDOPX, match_opcode, 0 },
 {"hp.mul",  0, INSN_CLASS_I, "d,s,t", MATCH_HP_MUL, MASK_HP_MUL, match_opcode, 0 },
+{"hp.bitand", 0, INSN_CLASS_I, "d,s,t", MATCH_HP_BITAND, MASK_HP_BITAND, match_opcode, 0 },
 {"hp.getrnd", 0, INSN_CLASS_I, "d",   MATCH_HP_GETRND, MASK_HP_GETRND, match_opcode, 0 },
 
 /* Multiply/Divide instruction subset */
