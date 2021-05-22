@@ -603,16 +603,16 @@
 #define MASK_HP_SAVRND  0xfff07fff // (1111111) (11111 later can be 00000   ) [00000 rs1] (111) (11111 later can be 00000   ) (1111111)
 
 #define MATCH_HP_LDOPX 0x0000107f  // (0000000) [xxxxx rs2] [yyyyy rs1] (001) (00000 later can make use) (1111111)
-#define MASK_HP_LDOPX  0xfe007fff  // (1111111) [00000 rs2] [00000 rs2] (111) (11111 later can be 00000) (1111111)
+#define MASK_HP_LDOPX  0xfe007fff  // (1111111) [00000 rs2] [00000 rs1] (111) (11111 later can be 00000) (1111111)
 
-#define MATCH_HP_MUL 0x0000207f    // (0000000) [xxxxx rs2] [yyyyy rs1] (010) [zzzzz rd] (1111111)
-#define MASK_HP_MUL  0xfe00707f    // (1111111) [00000 rs2] [00000 rs2] (111) [00000 rd] (1111111)
+#define MATCH_HP_MUL 0x0000207f    // (00) [wwwww rs3] [xxxxx rs2] [yyyyy rs1] (010) [zzzzz rd] (1111111)
+#define MASK_HP_MUL  0xc000707f    // (11) [00000 rs3] [00000 rs2] [00000 rs1] (111) [00000 rd] (1111111)
 
 #define MATCH_HP_GETRND 0x0000307f // (0000000) (00000) (00000) (011) [xxxxx rd] (1111111)
 #define MASK_HP_GETRND  0xfffff07f // (1111111) (11111) (11111) (111) [00000 rd] (1111111)
 
-#define MATCH_HP_BITAND 0x0000407f // (0000000) [xxxxx rs2] [yyyyy rs1] (100) [zzzzz rd] (1111111)
-#define MASK_HP_BITAND  0xfe00707f // (1111111) [00000 rs2] [00000 rs2] (111) [00000 rd] (1111111)
+#define MATCH_HP_BITAND 0x0000407f // (00) [wwwww rs3] [xxxxx rs2] [yyyyy rs1] (100) [zzzzz rd] (1111111)
+#define MASK_HP_BITAND  0xc000707f // (11) [00000 rs3] [00000 rs2] [00000 rs1] (111) [00000 rd] (1111111)
 
 
 /* Privileged CSR addresses (v1.11).  */

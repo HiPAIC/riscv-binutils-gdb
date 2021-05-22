@@ -201,6 +201,9 @@ static const char * const riscv_pred_succ[16] =
 
 /* RV fields.  */
 
+#define OP_MASK_SECRET_RS3 0x1f
+#define OP_SH_SECRET_RS3 25
+
 #define OP_MASK_OP		0x7f
 #define OP_SH_OP		0
 #define OP_MASK_RS2		0x1f

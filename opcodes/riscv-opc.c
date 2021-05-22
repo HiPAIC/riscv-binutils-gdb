@@ -493,8 +493,10 @@ const struct riscv_opcode riscv_opcodes[] =
 // We should later define our own ISA class.
 {"hp.savrnd", 0, INSN_CLASS_I, "s",   MATCH_HP_SAVRND, MASK_HP_SAVRND, match_opcode, 0 },
 {"hp.ldopx", 0, INSN_CLASS_I, "s,t",  MATCH_HP_LDOPX, MASK_HP_LDOPX, match_opcode, 0 },
-{"hp.mul",  0, INSN_CLASS_I, "d,s,t", MATCH_HP_MUL, MASK_HP_MUL, match_opcode, 0 },
-{"hp.bitand", 0, INSN_CLASS_I, "d,s,t", MATCH_HP_BITAND, MASK_HP_BITAND, match_opcode, 0 },
+// NOTE(xzl): we must use one char to denote secret mul rs3. We chose # because it's shift+3.
+// We cannot use existing rs3 char ('r') because it is for microMIPS and has empty range.
+{"hp.mul",  0, INSN_CLASS_I, "d,s,t,#", MATCH_HP_MUL, MASK_HP_MUL, match_opcode, 0 },
+{"hp.bitand", 0, INSN_CLASS_I, "d,s,t,#", MATCH_HP_BITAND, MASK_HP_BITAND, match_opcode, 0 },
 {"hp.getrnd", 0, INSN_CLASS_I, "d",   MATCH_HP_GETRND, MASK_HP_GETRND, match_opcode, 0 },
 
 /* Multiply/Divide instruction subset */
