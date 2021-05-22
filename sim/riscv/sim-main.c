@@ -1327,14 +1327,14 @@ execute_i (SIM_CPU *cpu, unsigned_word iw, const struct riscv_opcode *op)
 
   switch (op->match)
     {
-    case MATCH_HP_GENRND:
-      TRACE_INSN (cpu, "hp.genrnd %s;  // rand_window[%s = %u] = NextRnd(), rng_data=%u",
+    case MATCH_HP_SAVRND:
+      TRACE_INSN (cpu, "hp.savrnd %s;  // rand_window[%s = %u] = NextRnd(), rng_data=%u",
       rs1_name, rs1_name, cpu->regs[rs1], cpu->hipaic.rng_data);
       // TODO(xzl): Should add a new TRACE kind for rand_window write.
       cpu->hipaic.rand_window[cpu->regs[rs1]] = NextRnd(cpu);
       break;
-    case MATCH_HP_LOPX:
-      TRACE_INSN (cpu, "hp.lopx %s, %s;  // input_u = %s = %u, input_r_idx_u = %s = %u",
+    case MATCH_HP_LDOPX:
+      TRACE_INSN (cpu, "hp.ldopx %s, %s;  // input_u = %s = %u, input_r_idx_u = %s = %u",
       rs1_name, rs2_name, rs1_name, cpu->regs[rs1], rs2_name, cpu->regs[rs2]);
       // TODO(xzl): Should add a new TRACE kind for input_u and input_r_idx_u write.
       cpu->hipaic.input_u = cpu->regs[rs1];
@@ -1347,8 +1347,8 @@ execute_i (SIM_CPU *cpu, unsigned_word iw, const struct riscv_opcode *op)
       rs1_name, cpu->regs[rs1], rs2_name, cpu->regs[rs2], cpu->hipaic.rand_window[cpu->regs[rs2]], cpu->hipaic.rng_data);
       store_rd(cpu, rd, SecretMultiply(cpu, rs1, rs2));
       break;
-    case MATCH_HP_NXTRND:
-      TRACE_INSN (cpu, "hp.nxtrnd %s;  // %s = NextRnd(), rng_data=%u",
+    case MATCH_HP_GETRND:
+      TRACE_INSN (cpu, "hp.getrnd %s;  // %s = NextRnd(), rng_data=%u",
       rd_name, rd_name, cpu->hipaic.rng_data);
       store_rd(cpu, rd, NextRnd(cpu));
       break;
