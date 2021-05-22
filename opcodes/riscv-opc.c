@@ -491,10 +491,10 @@ const struct riscv_opcode riscv_opcodes[] =
 // HiPAIC extended
 // TODO(xzl): this is a hack! use INSN_CLASS_I so they are always enabled.
 // We should later define our own ISA class.
-{"hp.genrnd", 0, INSN_CLASS_I, "s",   MATCH_HP_GENRND, MASK_HP_GENRND, match_opcode, 0 },
-{"hp.lopx", 0, INSN_CLASS_I, "s,t",   MATCH_HP_LOPX, MASK_HP_LOPX, match_opcode, 0 },
+{"hp.savrnd", 0, INSN_CLASS_I, "s",   MATCH_HP_SAVRND, MASK_HP_SAVRND, match_opcode, 0 },
+{"hp.ldopx", 0, INSN_CLASS_I, "s,t",  MATCH_HP_LDOPX, MASK_HP_LDOPX, match_opcode, 0 },
 {"hp.mul",  0, INSN_CLASS_I, "d,s,t", MATCH_HP_MUL, MASK_HP_MUL, match_opcode, 0 },
-{"hp.nxtrnd", 0, INSN_CLASS_I, "d",   MATCH_HP_NXTRND, MASK_HP_NXTRND, match_opcode, 0 },
+{"hp.getrnd", 0, INSN_CLASS_I, "d",   MATCH_HP_GETRND, MASK_HP_GETRND, match_opcode, 0 },
 
 /* Multiply/Divide instruction subset */
 {"mul",       0, INSN_CLASS_M,   "d,s,t",  MATCH_MUL, MASK_MUL, match_opcode, 0 },

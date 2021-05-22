@@ -599,17 +599,17 @@
 #define MASK_CUSTOM3_RD_RS1_RS2  0x707f
 
 // HiPAIC extended
-#define MATCH_HP_GENRND 0x0000007f // (0000000) (00000 later can use for imm) [xxxxx rs1] (000) (00000 later can use for imm) (1111111)
-#define MASK_HP_GENRND  0xfff07fff // (1111111) (11111 later can be 00000   ) [00000 rs1] (111) (11111 later can be 00000   ) (1111111)
+#define MATCH_HP_SAVRND 0x0000007f // (0000000) (00000 later can use for imm) [xxxxx rs1] (000) (00000 later can use for imm) (1111111)
+#define MASK_HP_SAVRND  0xfff07fff // (1111111) (11111 later can be 00000   ) [00000 rs1] (111) (11111 later can be 00000   ) (1111111)
 
-#define MATCH_HP_LOPX 0x0000107f   // (0000000) [xxxxx rs2] [yyyyy rs1] (001) (00000 later can make use) (1111111)
-#define MASK_HP_LOPX  0xfe007fff   // (1111111) [00000 rs2] [00000 rs2] (111) (11111 later can be 00000) (1111111)
+#define MATCH_HP_LDOPX 0x0000107f  // (0000000) [xxxxx rs2] [yyyyy rs1] (001) (00000 later can make use) (1111111)
+#define MASK_HP_LDOPX  0xfe007fff  // (1111111) [00000 rs2] [00000 rs2] (111) (11111 later can be 00000) (1111111)
 
 #define MATCH_HP_MUL 0x0000207f    // (0000000) [xxxxx rs2] [yyyyy rs1] (010) [zzzzz rd] (1111111)
 #define MASK_HP_MUL  0xfe00707f    // (1111111) [00000 rs2] [00000 rs2] (111) [00000 rd] (1111111)
 
-#define MATCH_HP_NXTRND 0x0000307f // (0000000) (00000) (00000) (011) [xxxxx rd] (1111111)
-#define MASK_HP_NXTRND  0xfffff07f // (1111111) (11111) (11111) (111) [00000 rd] (1111111)
+#define MATCH_HP_GETRND 0x0000307f // (0000000) (00000) (00000) (011) [xxxxx rd] (1111111)
+#define MASK_HP_GETRND  0xfffff07f // (1111111) (11111) (11111) (111) [00000 rd] (1111111)
 
 
 /* Privileged CSR addresses (v1.11).  */
@@ -1147,10 +1147,10 @@ DECLARE_INSN(custom3_rd_rs1, MATCH_CUSTOM3_RD_RS1, MASK_CUSTOM3_RD_RS1)
 DECLARE_INSN(custom3_rd_rs1_rs2, MATCH_CUSTOM3_RD_RS1_RS2, MASK_CUSTOM3_RD_RS1_RS2)
 
 // HiPAIC extended
-DECLARE_INSN(hp_genrnd, MATCH_HP_GENRND, MASK_HP_GENRND)
-DECLARE_INSN(hp_lopx, MATCH_HP_LOPX, MASK_HP_LOPX)
+DECLARE_INSN(hp_savrnd, MATCH_HP_SAVRND, MASK_HP_SAVRND)
+DECLARE_INSN(hp_ldopx, MATCH_HP_LDOPX, MASK_HP_LDOPX)
 DECLARE_INSN(hp_mul, MATCH_HP_MUL, MASK_HP_MUL)
-DECLARE_INSN(hp_nxtrnd, MATCH_HP_NXTRND, MASK_HP_NXTRND)
+DECLARE_INSN(hp_getrnd, MATCH_HP_GETRND, MASK_HP_GETRND)
 
 #endif /* DECLARE_INSN.  */
 #ifdef DECLARE_CSR
