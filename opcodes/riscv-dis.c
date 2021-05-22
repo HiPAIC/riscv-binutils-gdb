@@ -168,6 +168,11 @@ print_insn_args (const char *d, insn_t l, bfd_vma pc, disassemble_info *info)
     {
       switch (*d)
 	{
+	case '#':  /* rs3 for secret Multiply/BitAnd */
+	  print (info->stream, "%s",
+		 riscv_gpr_names[EXTRACT_OPERAND (SECRET_RS3, l)]);
+	  break;
+
 	case 'C': /* RVC */
 	  switch (*++d)
 	    {

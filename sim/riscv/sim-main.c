@@ -1281,10 +1281,11 @@ static unsigned_word NextRnd(SIM_CPU *cpu) {
 #define ET unsigned_word
 #define DECIMAL_BITS (sizeof(T)*8/2)
 
-static unsigned_word SecretMultiply(SIM_CPU *cpu, int rs1, int rs2) {
+static unsigned_word SecretMultiply(SIM_CPU *cpu, int rs1, int rs2, int rs3) {
   const T r1 = cpu->hipaic.rand_window[cpu->hipaic.input_r_idx_u];
   const T r2 = cpu->hipaic.rand_window[cpu->regs[rs2]];
   const T r3 = NextRnd(cpu);
+  cpu->hipaic.rand_window[cpu->regs[rs3]] = r3;
   const T u = cpu->hipaic.input_u;
   const T v = cpu->regs[rs1];
 
@@ -1298,10 +1299,11 @@ static unsigned_word SecretMultiply(SIM_CPU *cpu, int rs1, int rs2) {
   return res;
 }
 
-static unsigned_word SecretBitAnd(SIM_CPU *cpu, int rs1, int rs2) {
+static unsigned_word SecretBitAnd(SIM_CPU *cpu, int rs1, int rs2, int rs3) {
   const T r1 = cpu->hipaic.rand_window[cpu->hipaic.input_r_idx_u];
   const T r2 = cpu->hipaic.rand_window[cpu->regs[rs2]];
   const T r3 = NextRnd(cpu);
+  cpu->hipaic.rand_window[cpu->regs[rs3]] = r3;
   const T u = cpu->hipaic.input_u;
   const T v = cpu->regs[rs1];
 
@@ -1321,9 +1323,11 @@ execute_i (SIM_CPU *cpu, unsigned_word iw, const struct riscv_opcode *op)
   int rd = (iw >> OP_SH_RD) & OP_MASK_RD;
   int rs1 = (iw >> OP_SH_RS1) & OP_MASK_RS1;
   int rs2 = (iw >> OP_SH_RS2) & OP_MASK_RS2;
+  int rs3 = (iw >> OP_SH_SECRET_RS3) & OP_MASK_SECRET_RS3;
   const char *rd_name = riscv_gpr_names_abi[rd];
   const char *rs1_name = riscv_gpr_names_abi[rs1];
   const char *rs2_name = riscv_gpr_names_abi[rs2];
+  const char *rs3_name = (rs3 >= 0 && rs3 < NGPR) ? riscv_gpr_names_abi[rs3] : "N/A";
   unsigned int csr = (iw >> OP_SH_CSR) & OP_MASK_CSR;
   unsigned_word i_imm = EXTRACT_ITYPE_IMM (iw);
   unsigned_word u_imm = EXTRACT_UTYPE_IMM ((unsigned64) iw);
@@ -1355,18 +1359,20 @@ execute_i (SIM_CPU *cpu, unsigned_word iw, const struct riscv_opcode *op)
       cpu->hipaic.input_r_idx_u = cpu->regs[rs2];
       break;
     case MATCH_HP_MUL:
-      TRACE_INSN (cpu, "hp.mul %s, %s, %s;  // %s = SecretMultiply(input_u=%u, rand_window[input_r_idx_u=%u]=%u, %s=%u, rand_window[%s=%u]=%u, rng_data=%u)",
-      rd_name, rs1_name, rs2_name, rd_name,
+      TRACE_INSN (cpu, "hp.mul %s, %s, %s, %s;  // %s = SecretMultiply(input_u=%u, rand_window[input_r_idx_u=%u]=%u, %s=%u, rand_window[%s=%u]=%u, rng_data=%u); rand_window[%s=%d]=NextRnd",
+      rd_name, rs1_name, rs2_name, rs3_name, rd_name,
       cpu->hipaic.input_u, cpu->hipaic.input_r_idx_u, cpu->hipaic.rand_window[cpu->hipaic.input_r_idx_u],
-      rs1_name, cpu->regs[rs1], rs2_name, cpu->regs[rs2], cpu->hipaic.rand_window[cpu->regs[rs2]], cpu->hipaic.rng_data);
-      store_rd(cpu, rd, SecretMultiply(cpu, rs1, rs2));
+      rs1_name, cpu->regs[rs1], rs2_name, cpu->regs[rs2], cpu->hipaic.rand_window[cpu->regs[rs2]], cpu->hipaic.rng_data,
+      rs3_name, cpu->regs[rs3]);
+      store_rd(cpu, rd, SecretMultiply(cpu, rs1, rs2, rs3));
       break;
     case MATCH_HP_BITAND:
-      TRACE_INSN (cpu, "hp.bitand %s, %s, %s;  // %s = SecretBitAnd(input_u=%u, rand_window[input_r_idx_u=%u]=%u, %s=%u, rand_window[%s=%u]=%u, rng_data=%u)",
-      rd_name, rs1_name, rs2_name, rd_name,
+      TRACE_INSN (cpu, "hp.bitand %s, %s, %s, %s;  // %s = SecretBitAnd(input_u=%u, rand_window[input_r_idx_u=%u]=%u, %s=%u, rand_window[%s=%u]=%u, rng_data=%u); rand_window[%s=%d]=NextRnd",
+      rd_name, rs1_name, rs2_name, rs3_name, rd_name,
       cpu->hipaic.input_u, cpu->hipaic.input_r_idx_u, cpu->hipaic.rand_window[cpu->hipaic.input_r_idx_u],
-      rs1_name, cpu->regs[rs1], rs2_name, cpu->regs[rs2], cpu->hipaic.rand_window[cpu->regs[rs2]], cpu->hipaic.rng_data);
-      store_rd(cpu, rd, SecretBitAnd(cpu, rs1, rs2));
+      rs1_name, cpu->regs[rs1], rs2_name, cpu->regs[rs2], cpu->hipaic.rand_window[cpu->regs[rs2]], cpu->hipaic.rng_data,
+      rs3_name, cpu->regs[rs3]);
+      store_rd(cpu, rd, SecretBitAnd(cpu, rs1, rs2, rs3));
       break;
     case MATCH_HP_GETRND:
       TRACE_INSN (cpu, "hp.getrnd %s;  // %s = NextRnd(), rng_data=%u",
