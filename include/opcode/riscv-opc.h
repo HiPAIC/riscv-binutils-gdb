@@ -612,6 +612,11 @@
 #define MATCH_HP_BITAND 0x0000407f // (00) [wwwww rs3] [xxxxx rs2] [yyyyy rs1] (100) [zzzzz rd] (1111111)
 #define MASK_HP_BITAND  0xc000707f // (11) [00000 rs3] [00000 rs2] [00000 rs1] (111) [00000 rd] (1111111)
 
+#define MATCH_HP_SEND 0x0000507f // (0000000) (00000) [xxxxx rs1] (101) (00000) (1111111)
+#define MASK_HP_SEND  0xfff07fff // (1111111) (11111) (00000 rs1) (111) (11111) (1111111)
+
+#define MATCH_HP_RECV 0x0000607f // (0000000) (00000) (00000) (110) [xxxxx rd] (1111111)
+#define MASK_HP_RECV  0xfffff07f // (1111111) (11111) (11111) (111) [00000 rd] (1111111)
 
 /* Privileged CSR addresses (v1.11).  */
 #define CSR_USTATUS 0x0
@@ -1152,6 +1157,8 @@ DECLARE_INSN(hp_ldopx, MATCH_HP_LDOPX, MASK_HP_LDOPX)
 DECLARE_INSN(hp_mul, MATCH_HP_MUL, MASK_HP_MUL)
 DECLARE_INSN(hp_bitand, MATCH_HP_BITAND, MASK_HP_BITAND)
 DECLARE_INSN(hp_getrnd, MATCH_HP_GETRND, MASK_HP_GETRND)
+DECLARE_INSN(hp_send, MATCH_HP_SEND, MASK_HP_SEND)
+DECLARE_INSN(hp_recv, MATCH_HP_RECV, MASK_HP_RECV)
 
 #endif /* DECLARE_INSN.  */
 #ifdef DECLARE_CSR
