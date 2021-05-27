@@ -1277,6 +1277,34 @@ static unsigned_word NextRnd(SIM_CPU *cpu) {
   return (cpu->hipaic.rng_data += 3);
 }
 
+#define COMM_FILE "hipaic-comm.dat"
+static void SecretSend(SIM_CPU *cpu, int rs1) {
+  if (!cpu->hipaic.fifo) {
+    cpu->hipaic.fifo = fopen(COMM_FILE, "wb");
+  }
+
+  const unsigned_word data = cpu->regs[rs1];
+  size_t ret = fwrite(&data, 1, sizeof(data), (FILE *)cpu->hipaic.fifo);
+  if (ret != sizeof(data)) {
+    fprintf(stderr, "Error in SecretSend: fwrite returns %d\n", ret);
+  }
+  fflush((FILE *)cpu->hipaic.fifo);
+}
+
+static unsigned_word SecretRecv(SIM_CPU *cpu) {
+  if (!cpu->hipaic.fifo) {
+    cpu->hipaic.fifo = fopen(COMM_FILE, "rb");
+  }
+
+  unsigned_word data = -1;
+  size_t ret = fread(&data, 1, sizeof(data), (FILE *)cpu->hipaic.fifo);
+  if (ret != sizeof(data)) {
+    fprintf(stderr, "Error in SecretRecv: fread returns %d\n", ret);
+  }
+  return data;
+}
+#undef COMM_FILE
+
 #define T unsigned_word
 #define ET unsigned_word
 #define DECIMAL_BITS (sizeof(T)*8/2)
@@ -1378,6 +1406,17 @@ execute_i (SIM_CPU *cpu, unsigned_word iw, const struct riscv_opcode *op)
       TRACE_INSN (cpu, "hp.getrnd %s;  // %s = NextRnd(), rng_data=%u",
       rd_name, rd_name, cpu->hipaic.rng_data);
       store_rd(cpu, rd, NextRnd(cpu));
+      break;
+    case MATCH_HP_SEND:
+      TRACE_INSN (cpu, "hp.send %s;  // SecretSend(%s = %u)",
+      rs1_name, rs1_name, cpu->regs[rs1]);
+      // TODO(xzl): Should add a new TRACE kind for FIFO write.
+      SecretSend(cpu, rs1);
+      break;
+    case MATCH_HP_RECV:
+      TRACE_INSN (cpu, "hp.recv %s;  // %s = SecretRecv()",
+      rd_name, rd_name);
+      store_rd(cpu, rd, SecretRecv(cpu));
       break;
     case MATCH_ADD:
       TRACE_INSN (cpu, "add %s, %s, %s;  // %s = %s + %s",

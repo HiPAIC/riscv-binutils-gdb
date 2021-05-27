@@ -77,6 +77,7 @@ struct _sim_cpu {
     unsigned_word rng_data;  // for random number generator
     unsigned_word input_u;
     unsigned_word input_r_idx_u;
+    void *fifo;  // Hold the FIFO for secret send / recv. Currently a FILE*
   } hipaic;
 
   sim_cpu_base base;
